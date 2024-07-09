@@ -55,7 +55,7 @@ To run the Electron desktop application:
 cd my-electron-app
 npm start
 
-###LICENSE
+### LICENSE
 This project is licensed under the MIT License
 
 
