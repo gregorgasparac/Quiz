@@ -41,11 +41,9 @@ Follow these steps to install and configure the project locally:
 
 ### Running the Backend
 
-To start the Node.js backend server:
+- To start the Node.js backend server:
 
-```bash
-cd backend
-node server.js
+node main.js
 
 ### Running the Frontend
 
