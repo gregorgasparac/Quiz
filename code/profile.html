@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Info</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            background: url('background.jpg') no-repeat center center fixed; 
+            background-size: cover; 
+        }
+        .container {
+            width: 80%;
+            margin: 70px auto 20px; /* Adjusted margin: top margin for space between navbar and container */
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .info {
+            margin-top: 20px; /* Added margin-top for space between player info and navbar */
+        }
+        .info p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .navbar {
+            background-color: #001e4d; /* Blue background */
+            font-family: calibri;
+            padding: 8px 15px; /* Adjusted padding */
+            height: 50px; /* Adjusted height */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* Ensure navbar is on top of other content */
+            display: flex;
+            justify-content: flex-end; /* Align items to the right */
+        }
+        .navdiv {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Align items to the right */
+            width: 100%; /* Full width */
+            max-width: 1200px; /* Adjust as needed */
+            margin: 0 auto; /* Center align within the navbar */
+        }
+        li {
+            list-style: none;
+            display: inline-block;
+            margin-left: 15px; /* Reduced margin */
+        }
+        li:first-child {
+            margin-left: 0; /* Remove margin for the first item */
+        }
+        li a {
+            color: white;
+            font-size: 16px; /* Reduced font size */
+            font-weight: bold;
+            padding: 10px; /* Reduced padding */
+            display: inline-block;
+            text-decoration: none; /* Remove underline */
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9); /* light background */
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fff; /* white background */
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #001e4d; /* dark blue border */
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .modal-content p {
+            color: #001e4d; /* dark blue text */
+        }
+
+        .modal-content button {
+            background: #fff;
+            color: #001e4d;
+            font-weight: 500;
+            width: 150px;
+            border: 0;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background: #f0f0f0; /* light gray background on hover */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="navdiv">
+        <ul>
+            <li><a href="#" id="home-link">Home</a></li>
+            <li><a href="#" id="leaderboard-link">Leaderboard</a></li>
+            <li><a href="#" id="profile-link">Profile</a></li>
+            <li><a href="#" id="logout-link">Log Out</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Player Info</h1>
+    <div class="info" id="player-info">
+        <!-- Player info will be inserted here dynamically -->
+    </div>
+    <hr> <!-- Horizontal line separator -->
+    <h1>Quiz History</h1>
+    <div class="info" id="quiz-details">
+        <!-- Quiz details will be inserted here dynamically -->
+    </div>
+</div>
+
+<!-- Modal for logout confirmation -->
+<div id="logoutModal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to log out?</p>
+        <button id="logout-yes">Yes</button>
+        <button id="logout-no">No</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get the JWT token from localStorage
+        const accessToken = localStorage.getItem('accessToken');
+
+        if (!accessToken) {
+            console.error('Access token not found.');
+            return;
+        }
+
+        // Fetch player info based on the authenticated user's token
+        fetch('http://localhost:3000/api/profile', {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Fetched data:', data); // Print fetched data to the console
+
+            // Check if data contains the expected structure
+            if (data && typeof data === 'object') {
+                const player = data; // Data should already be in JSON format
+
+                const infoDiv = document.getElementById('player-info');
+                
+                // Create elements to display player information
+                const username = document.createElement('p');
+                username.textContent = `Username: ${player.username}`;
+                
+                const quizCount = document.createElement('p');
+                quizCount.textContent = `Quiz Count: ${player.quiz_count}`;
+                
+                const maxResult = document.createElement('p');
+                maxResult.textContent = `Max Result: ${player.max_result}`;
+                
+                const registrationTime = document.createElement('p');
+                registrationTime.textContent = `Registration Time: ${formatDate(player.registration_time)}`; // Format date function
+                
+                // Append elements to infoDiv
+                infoDiv.appendChild(username);
+                infoDiv.appendChild(quizCount);
+                infoDiv.appendChild(maxResult);
+                infoDiv.appendChild(registrationTime);
+
+                // Now fetch the quiz details using the username
+                fetchQuizDetails(player.username);
+            } else {
+                console.error('Data is not in the expected format:', data);
+            }
+        })
+        .catch(error => console.error('Error fetching player info:', error));
+
+        // Function to format date to 'YYYY-MM-DD HH:MM:SS' format
+        function formatDate(dateTimeString) {
+            const date = new Date(dateTimeString);
+            const formattedDate = `${date.getFullYear()}-${padNumber(date.getMonth() + 1)}-${padNumber(date.getDate())} ${padNumber(date.getHours())}:${padNumber(date.getMinutes())}:${padNumber(date.getSeconds())}`;
+            return formattedDate;
+        }
+
+        // Function to pad numbers with leading zeros
+        function padNumber(number) {
+            return number.toString().padStart(2, '0');
+        }
+
+        // Fetch quiz details based on the username
+        function fetchQuizDetails(username) {
+            // Fetch quiz details first
+            fetch(`http://localhost:3000/api/details/${username}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Fetched quiz details:', data); // Print fetched data to the console
+
+                // Check if data contains the expected structure
+                if (Array.isArray(data)) {
+                    const quizDetailsDiv = document.getElementById('quiz-details');
+
+                    // Group quiz details by quiz_id
+                    const groupedData = data.reduce((acc, detail) => {
+                        (acc[detail.quiz_id] = acc[detail.quiz_id] || []).push(detail);
+                        return acc;
+                    }, {});
+
+                    // Iterate over each quiz group
+                    Object.keys(groupedData).forEach(quizId => {
+                        const quizGroup = groupedData[quizId];
+
+                        // Create a section for each quiz group
+                        const quizSection = document.createElement('div');
+                        quizSection.classList.add('quiz-section');
+
+                        // Create header for the quiz group
+                        const header = document.createElement('h2');
+                        header.textContent = `Quiz ID: ${quizId}`;
+                        quizSection.appendChild(header);
+
+                        // Create table for quiz details
+                        const table = document.createElement('table');
+                        const thead = document.createElement('thead');
+                        const tbody = document.createElement('tbody');
+
+                        // Create table header
+                        const headerRow = document.createElement('tr');
+                        const headers = ['Question', 'Answer', 'Correct'];
+                        headers.forEach(headerText => {
+                            const th = document.createElement('th');
+                            th.textContent = headerText;
+                            headerRow.appendChild(th);
+                        });
+                        thead.appendChild(headerRow);
+
+                        // Create table rows for quiz details
+                        quizGroup.forEach(detail => {
+                            const row = document.createElement('tr');
+                            ['question', 'answer', 'correct'].forEach(field => {
+                                const td = document.createElement('td');
+                                td.textContent = detail[field];
+                                row.appendChild(td);
+                            });
+                            tbody.appendChild(row);
+                        });
+
+                        table.appendChild(thead);
+                        table.appendChild(tbody);
+                        quizSection.appendChild(table);
+
+                        // Fetch and display quiz result (score)
+                        fetch(`http://localhost:3000/api/quiz/${username}`, {
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok ' + response.statusText);
+                            }
+                            return response.json();
+                        })
+                        .then(resultData => {
+                            // Find the correct score for the current quiz
+                            const score = resultData.find(result => result.quiz_id === parseInt(quizId, 10));
+                            if (score) {
+                                const scoreParagraph = document.createElement('p');
+                                scoreParagraph.textContent = `Score: ${score.result}`;
+                                quizSection.appendChild(scoreParagraph);
+                            } else {
+                                console.warn(`No score found for quiz ID ${quizId}`);
+                            }
+                        })
+                        .catch(error => console.error('Error fetching quiz result:', error));
+
+                        // Append quiz section to main quiz details div
+                        quizDetailsDiv.appendChild(quizSection);
+                    });
+                } else {
+                    console.error('Data is not in the expected format:', data);
+                }
+            })
+            .catch(error => console.error('Error fetching quiz details:', error));
+        }
+
+
+        // Get references to navbar links
+        var homeLink = document.getElementById('home-link');
+        var leaderboardLink = document.getElementById('leaderboard-link');
+        var profileLink = document.getElementById('profile-link');
+        var logoutLink = document.getElementById('logout-link');
+        
+        // Get references to modals and buttons
+        var logoutModal = document.getElementById('logoutModal');
+        var logoutYes = document.getElementById('logout-yes');
+        var logoutNo = document.getElementById('logout-no');
+
+        // Add click event listeners to navigate to respective pages
+        homeLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            window.location.href = 'index.html'; // Replace with your actual home page URL
+        });
+
+        leaderboardLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            window.location.href = 'leaderboard.html'; // Replace with your leaderboard page URL
+        });
+
+        profileLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            window.location.href = 'profile.html'; // Replace with your about page URL
+        });
+
+        // Show logout confirmation modal
+        logoutLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            logoutModal.style.display = 'block';
+        });
+
+        logoutNo.addEventListener('click', function() {
+            logoutModal.style.display = 'none';
+        });
+
+        logoutYes.addEventListener('click', function() {
+            localStorage.removeItem('accessToken'); 
+            window.location.href = 'login.html'; 
+        });
+
+        // Close the modal if user clicks outside of it
+        window.addEventListener('click', function(event) {
+            if (event.target == logoutModal) {
+                logoutModal.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

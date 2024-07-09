@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style type="text/css">
+        * {
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: url('background.jpg') no-repeat center center fixed; 
+            background-size: cover; 
+            overflow: hidden; 
+            font-family: Calibri, sans-serif;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(10px); /* Apply blur effect */
+            z-index: -1; /* Ensure it is behind the content */
+        }
+        .content {
+            display: flex;
+            flex-direction: column; /* Align items vertically */
+            align-items: center;
+            z-index: 1; /* Position above the blurred background */
+        }
+        button {
+            background-color: #001e4d;
+            margin: 15px 0; /* Vertical margin for spacing */
+            border-radius: 10px;
+            padding: 20px 40px; /* Increased padding */
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 22px; /* Increased font size */
+            width: 250px; /* Increased width */
+        }
+        button:hover {
+            background-color: #001e4d; /* Darker shade of blue on hover */
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9); /* light background */
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fff; /* white background */
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #001e4d; /* dark blue border */
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .modal-content p {
+            color: #001e4d; /* dark blue text */
+        }
+
+        .modal-content button {
+            background: #fff;
+            color: #001e4d;
+            font-weight: 500;
+            width: 150px;
+            border: 0;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background: #f0f0f0; /* light gray background on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <button onclick="window.location.href='quiz.html'">Play Quiz</button>
+        <button onclick="window.location.href='leaderboard.html'">Leaderboard</button>
+        <button onclick="window.location.href='profile.html'">Profile</button>
+        <button id="logout-link">Log Out</button>
+    </div>
+
+    <!-- Modal for logout confirmation -->
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <p>Are you sure you want to log out?</p>
+            <button id="logout-yes">Yes</button>
+            <button id="logout-no">No</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get references to logout link and modal
+            var logoutLink = document.getElementById('logout-link');
+            var logoutModal = document.getElementById('logoutModal');
+            var logoutYes = document.getElementById('logout-yes');
+            var logoutNo = document.getElementById('logout-no');
+
+            // Show logout confirmation modal
+            logoutLink.addEventListener('click', function(event) {
+                event.preventDefault();
+                logoutModal.style.display = 'block';
+            });
+
+            logoutNo.addEventListener('click', function() {
+                logoutModal.style.display = 'none';
+            });
+
+            logoutYes.addEventListener('click', function() {
+                localStorage.removeItem('token'); 
+                window.location.href = 'login.html'; 
+            });
+
+            // Close the modals if user clicks outside of them
+            window.addEventListener('click', function(event) {
+                if (event.target == logoutModal) {
+                    logoutModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

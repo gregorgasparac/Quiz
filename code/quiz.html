@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GeoGuess Quiz</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Style for the back-to-home button */
+    #back-to-home-btn {
+      background: #fff;
+      color: #001e4d;
+      font-weight: 500;
+      width: 150px;
+      border: 0;
+      padding: 10px;
+      position: fixed; /* Fixed positioning */
+      top: 20px; /* Distance from the top */
+      right: 20px; /* Distance from the right */
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9); /* light background */
+      overflow: auto;
+    }
+
+    .modal-content {
+      background-color: #fff; /* white background */
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #001e4d; /* dark blue border */
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+      border-radius: 4px;
+    }
+
+    .modal-content p {
+      color: #001e4d; /* dark blue text */
+    }
+
+    .modal-content button {
+      background: #fff;
+      color: #001e4d;
+      font-weight: 500;
+      width: 150px;
+      border: 0;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background: #f0f0f0; /* light gray background on hover */
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>GeoGuess Quiz</h1>
+    <div class="quiz">
+      <h2 id="question"></h2>
+      <div id="flag-container">
+        <!-- Flag will be displayed here -->
+      </div>
+      <div id="data-container">
+        <!-- Buttons will be populated here -->
+        <button id="button1" class="btn"></button>
+        <button id="button2" class="btn"></button>
+        <button id="button3" class="btn"></button>
+        <button id="button4" class="btn"></button>
+      </div>
+    </div>
+    <button id="next-btn">Next</button>
+  </div>
+  <!-- Back to Home button -->
+  <button id="back-to-home-btn">Back to Home</button>
+
+  <!-- Modal for confirmation -->
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <p>Are you sure you want to go back to the home page?</p>
+      <button id="confirm-yes">Yes</button>
+      <button id="confirm-no">No</button>
+    </div>
+  </div>
+  
+  <button id="play-again-btn">Play Again</button>
+  <script src="quiz.js"></script>
+  <script>
+    // JavaScript for handling the confirmation dialog and navigation
+    var backToHomeBtn = document.getElementById('back-to-home-btn');
+    var modal = document.getElementById('myModal');
+    var confirmYes = document.getElementById('confirm-yes');
+    var confirmNo = document.getElementById('confirm-no');
+
+    backToHomeBtn.addEventListener('click', function() {
+      modal.style.display = 'block';
+    });
+
+    confirmNo.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+
+    confirmYes.addEventListener('click', function() {
+      modal.style.display = 'none';
+      window.location.href = 'index.html'; 
+    });
+
+    // Close the modal if user clicks outside of it
+    window.addEventListener('click', function(event) {
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    });
+    </script>
+</body>
+</html>
