@@ -27,7 +27,7 @@ Follow these steps to install and configure the project locally:
    - No specific installation steps needed for frontend. Ensure you have a modern web browser.
 
 3. **Clone the Repository**:
-   - git clone https://github.com/gregorgasparac/GeoGuess-Quiz.git
+   - git clone https://github.com/gregorgasparac/Quiz.git
    - cd GeoGuess-Quiz
      
 4. **Install Dependencies**:
