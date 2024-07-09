@@ -28,7 +28,7 @@ Follow these steps to install and configure the project locally:
 
 3. **Clone the Repository**:
    - git clone https://github.com/gregorgasparac/Quiz.git
-   - cd GeoGuess-Quiz
+   - cd Quiz
      
 4. **Install Dependencies**:
    - npm install
