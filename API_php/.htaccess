@@ -1,0 +1,36 @@
+#QUIZ
+
+RewriteEngine On 				# Vklopi 'rewriting engine'
+
+RewriteRule ^users/?$ users.php [NC,L]						# če gre za zahtevek na relativni URL '/users' ga spremeni v 'users.php'
+RewriteRule ^users/(.+)/?$ users.php?username=$1 [NC,L] 	# preslika vzorec 'users/xxxx' v 'users.php?username=xxxx' 
+
+RewriteRule ^quiz/?$ quiz.php [NC,L]					# če gre za zahtevek na relativni URL '/quiz' ga spremeni v 'quiz.php'
+RewriteRule ^quiz/(.+)/?$ quiz.php?username=$1 [NC,L] 	# preslika vzorec 'quiz/xxxx' v 'quiz.php?username=xxxx'
+
+RewriteRule ^template/?$ template.php [NC,L]
+RewriteRule ^template/(.+)/?$ template.php?template_id=$1 [NC,L]
+
+RewriteRule ^leaderboard/?$ leaderboard.php [NC,L]
+
+RewriteRule ^profile/?$ profile.php [NC,L]
+RewriteRule ^profile/(.+)/?$ profile.php?username=$1 [NC,L]
+
+RewriteRule ^country/?$ country.php [NC,L]
+RewriteRule ^country/(.+)/?$ country.php?country_id=$1 [NC,L]
+RewriteRule ^country/(\d+)/([^/]+)/?$ country.php?country_id=$1&capital_city=$2 [NC,L]
+
+RewriteRule ^capital/?$ capital_city.php [NC,L]
+RewriteRule ^capital/(.+)/?$ capital_city.php?country_id=$1 [NC,L]
+RewriteRule ^capital/(\d+)/([^/]+)/?$ capital_city.php?country_id=$1&capital_city=$2 [NC,L]
+
+RewriteRule ^details/?$ details.php [NC,L]
+RewriteRule ^details/(.+)/?$ details.php?id=$1 [NC,L]
+
+
+
+# Onemogočimo direkten dostop do tools.php
+<Files tools.php>
+Order allow,deny
+Deny from all
+</Files>
