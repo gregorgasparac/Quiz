@@ -2,10 +2,6 @@
 
 GeoGuess Quiz is an application where users participate in a geographical quiz and compete with other players.
 
-## API Documentation
-
-http://localhost:3000/documentation
-
 ## Technologies
 
 - **Backend**: XAMPP (MySQL), Node.js
