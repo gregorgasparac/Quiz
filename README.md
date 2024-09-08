@@ -49,10 +49,6 @@ Follow these steps to install and configure the project locally:
 
 node main.js
 
-### Running the Frontend
-
-http://localhost:3000/login
-
 ### Running the Desktop App
 
 To run the Electron desktop application:
